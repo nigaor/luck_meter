@@ -24,7 +24,7 @@ export default function EventList({ events, onDeleteEvent }: EventListProps) {
     if (score === 0) return 'bg-gray-100 text-gray-800';
     if (score < -5) return 'bg-red-100 text-red-800';
     if (score < 0) return 'bg-red-50 text-red-700';
-    return 'bg-gray-100 text-gray-800'; // デフォルト 
+    return 'bg-gray-100 text-gray-800'; // デフォルト  
   };
 
   return (
