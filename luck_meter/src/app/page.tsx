@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { EventItem } from '@/types';
 import EventForm from '@/components/EventForm';
 import EventList from '@/components/EventList';
-import { simpleScoringFunction } from '@/lib/scoring';
-// import { aiScoringFunction } from '@/lib/scoring';
+// import { simpleScoringFunction } from '@/lib/scoring';
+import { aiScoringFunction } from '@/lib/scoring';
 
 export default function HomePage() {
   const [events, setEvents] = useState<EventItem[]>([]);
@@ -39,12 +39,12 @@ export default function HomePage() {
   }, [events]);
 
   const handleAddEvent = async (eventText: string, category?: string) => {
-    const score = simpleScoringFunction(eventText, category);
+    const score = await aiScoringFunction(eventText, category);
 
     const newEvent: EventItem = {
       id: crypto.randomUUID(),
       text: eventText,
-      score: score,
+      score: typeof score === 'number' ? score : 0,
       createdAt: new Date(),
       category: category,
     };
