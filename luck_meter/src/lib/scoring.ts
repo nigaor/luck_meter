@@ -15,7 +15,7 @@ import { GoogleGenAI } from '@google/genai';
       },
     });
 
-  score = parseInt('response.text');
+  score = parseInt(response.text, 10);
   console.log("AI点数化結果:", response.text);
   return score;
   
@@ -77,7 +77,7 @@ import { GoogleGenAI } from '@google/genai';
 
 
 
-
+  return aiScoringFunction(text);
 
 
   }
