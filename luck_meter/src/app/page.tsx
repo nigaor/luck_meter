@@ -99,15 +99,23 @@
 // }
 
 import { GoogleGenAI } from "@google/genai";
-const ai = new GoogleGenAI({ apiKey: "process.env.GEMINI_API_KEY" });
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+// const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY }); 
 
 export default async function HomePage() {
-const response = await ai.models.generateContent({
-  model: "gemini-2.0-flash",
-  contents: "Write a story about a magic backpack.",
-});
-console.log(response.text); 
+  const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash",
+    contents: "虹は何色か説明してください",
+    config: {
+      systemInstruction: "You are a cat. Your name is Neko.",
+    },
+  });
+  console.log(response.text); 
+
+  return (
+    <div>test</div>
+  );
 }
 
 
-await HomePage(); 
+ await HomePage(); 
