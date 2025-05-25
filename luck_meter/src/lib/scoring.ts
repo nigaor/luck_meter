@@ -2,10 +2,12 @@ import { ScoringFunction } from '@/types';
 import { GoogleGenAI } from '@google/genai';
 
   export const resultScoringFunction:ScoringFunction = async (text: string, category?: string): Promise<number> => {
+    
     const aiScoringFunction: ScoringFunction = async (text):Promise<number> => {
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
     let score = 0;
-
-    const genAI = new GoogleGenAI({ apiKey:"GEMINI_API_KEY"});
+    let adjustedScore = 0;
 
     const response = await genAI.models.generateContent({
       model: "gemini-2.0-flash",
@@ -15,28 +17,26 @@ import { GoogleGenAI } from '@google/genai';
       },
     });
 
-  score = parseInt(response.text, 10);
-  console.log("AI点数化結果:", response.text);
-  return score;
-  
-  // try {
-  //   const result = await response.model.generateContet(prompt);
-  //   const response = await result.response;n
-  //   const scoreText = await response.text();
-  //   let score = parseInt(scoreText, 100);
-  //   if (isNaN(score)) {
-  //     console.warn("AIからの点数解析に失敗。デフォルトスコアを使用。Response: ", scoreText);
-  //     return simpleScoringFunction(text); // AI失敗時はシンプルロジックで代替
-  //   }
-  //   return Math.max(-100, Math.min(100, score));
-  // } catch (error) {
-  //   console.error("AI点数化エラー:", error);
-  //   return simpleScoringFunction(text); // エラー時もシンプルロジックで代替
-  // }
+    try {
+      if (!response || !response.text) {
+      console.warn("AIからの応答が不正です。デフォルトスコアを使用します。");
+      return simpleScoringFunction(text); // AI失敗時はシンプルロジックで代替
+      }
+      score = parseInt(response.text, 10);
+      if(isNaN(score)) {
+        throw new Error(`AIからの点数解析に失敗しました。:${response.text}`);
+      }
+      console.log("AI点数化結果:", response.text);
+      adjustedScore = Math.max(-100, Math.min(100, score))
+      return adjustedScore;
+    } catch (error) { 
+      console.error("AI点数化エラー:デフォルトスコアを使用します", error);
+      return simpleScoringFunction(text); // エラー時もシンプルロジックで代替
+    }
   };
 
 //簡易的なキーワードベースの点数化ロジック
-  const simpleScoringFunction: ScoringFunction = (text) => {
+  const simpleScoringFunction: ScoringFunction =async (text):Promise<number> => {
   let score = 0;
   const lowerText = text.toLowerCase();
 
@@ -71,15 +71,10 @@ import { GoogleGenAI } from '@google/genai';
 
 
   // 点数の範囲を制限 (例: -10 から +10)
-  // return Math.max(-10, Math.min(10, score));
-  return score; // 今回は制限なし
+  return Math.max(-10, Math.min(10, score));
 };
 
-
-
-  return aiScoringFunction(text);
-
-
+    return aiScoringFunction(text);
   }
 
 
