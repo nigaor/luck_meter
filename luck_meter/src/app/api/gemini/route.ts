@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
     const response = await genAI.models.generateContent({
       model: `${MODEL_NAME}`,
-      contents: {text},
+      contents: {text: userPrompt},
       config: {
         systemInstruction: "あなたはポジティブ心理学の専門家です。以下の出来事をポジティブ度と重要度（個人的な成長や幸福への貢献など）を考慮して-100点から+100点で点数化してください。点数のみを返してください。",
       },
@@ -39,10 +39,9 @@ export async function POST(request: Request) {
 
     // 4. Gemini APIにリクエストを送信
     console.log(`バックエンド: Gemini APIにプロンプトを送信中: "${userPrompt}"`);
-    const promptResult = await genAI.models.generateContent(userPrompt);
-    const response = promptResult.response;
+    const responseResult = response.text;
 
-    if (!response) {
+    if (!responseResult) {
       console.error("バックエンドエラー: Gemini APIから有効なレスポンスが得られませんでした。");
       return NextResponse.json(
         { error: "AIからの応答がありませんでした。" },
@@ -50,7 +49,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const generatedText = response.text();
+    const generatedText = responseResult;
     console.log(`バックエンド: Gemini APIからの応答: "${generatedText}"`);
 
     // 5. クライアントに結果を返す
