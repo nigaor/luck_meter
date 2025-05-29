@@ -61,7 +61,7 @@
        <main className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
          <header className="mb-12 text-center">
            <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-500 pb-2">
-             デイリーイベントスコアラー
+             Luck Meter
            </h1>
            <p className="text-lg text-gray-600">
              日常の出来事を記録して、ポジティブな毎日を！
@@ -83,25 +83,3 @@
      </div>
    );
  }
-
-// import { GoogleGenAI } from "@google/genai";
-// const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-//  const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY }); 
-
-// export default async function HomePage() {
-//   const response = await ai.models.generateContent({
-//     model: "gemini-2.0-flash",
-//     contents: "虹は何色か説明してください",
-//     config: {
-//       systemInstruction: "You are a cat. Your name is Neko.",
-//     },
-//   });
-//   console.log(response.text); 
-
-//   return (
-//     <div>test</div> 
-//   );
-// }
-
-
-//  await HomePage(); 
