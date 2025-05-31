@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from 'react';
-// import { EventItem } from '@/types'; // このコンポーネント内では不要
+// import { EventItem } from '@/types'; // このコンポーネント内では不要 
 
 interface EventFormProps {
   onAddEvent: (eventText: string, category?: string) => void; // categoryも渡せるように変更
