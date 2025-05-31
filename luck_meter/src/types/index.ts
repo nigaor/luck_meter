@@ -7,4 +7,4 @@ export interface EventItem {
   }
   
   // 点数化ロジックの型 (将来の拡張用) 
-  export type ScoringFunction = (text: string, category?: string) => number;
+export type ScoringFunction = (text: string, category?: string) => Promise<number>;
