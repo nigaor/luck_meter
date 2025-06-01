@@ -26,7 +26,7 @@
      if (events.length > 0) {
        localStorage.setItem('dailyEvents', JSON.stringify(events));
      } else {
-       // イベントが0件になったらローカルストレージからも削除  
+       // イベントが0件になったらローカルストレージからも削除   
        const storedEvents = localStorage.getItem('dailyEvents');
        if(storedEvents) {
          localStorage.removeItem('dailyEvents');
