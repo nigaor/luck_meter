@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Gemini APIクライアントの初期化  
+    // 3. Gemini APIクライアントの初期化   
     const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
     const response = await genAI.models.generateContent({
       model: `${MODEL_NAME}`,
