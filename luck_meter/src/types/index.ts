@@ -3,7 +3,7 @@ export interface EventItem {
     text: string;
     score: number;
     createdAt: Date;
-    category?: string; // オプションでカテゴリ
+    category?: string;
   }
   
   // 点数化ロジックの型 (将来の拡張用) 
