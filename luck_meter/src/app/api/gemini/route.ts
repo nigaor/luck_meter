@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error("バックエンドで予期せぬエラーが発生しました:", error);
-    // エラーオブジェクトの構造によって、より詳細な情報をログに出力することも検討
+    // エラーオブジェクトの構造によって、より詳細な情報をログに出力することも検討　
     let errorMessage = "サーバー内部でエラーが発生しました。";
     if (error instanceof Error) {
         errorMessage = error.message;
@@ -80,3 +80,4 @@ export async function POST(request: Request) {
     );
   }
 }
+
