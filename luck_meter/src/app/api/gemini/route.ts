@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       model: `${MODEL_NAME}`,
       contents: {text: userPrompt},
       config: {
-        systemInstruction: "あなたはポジティブ心理学の専門家です。以下の出来事をポジティブ度と重要度（個人的な成長や幸福への貢献など）を考慮して-100点から+100点で点数化してください。点数のみを返してください。",
+        systemInstruction: "あなたはポジティブ心理学の専門家です。以下の出来事をポジティブ度と重要度（個人的な成長や幸福への貢献など）を考慮して0点から100点で点数化してください。点数のみを返してください。",
       },
     });
 
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const generatedText = responseResult;
+    const generatedText = responseResult.replace(/\n/,'');
     console.log(`バックエンド: Gemini APIからの応答: "${generatedText}"`);
 
     // 5. クライアントに結果を返す
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     // AIの応答が {"score": 75} のようなJSON文字列であることを期待
     try {
         const scoreData = JSON.parse(generatedText);
-        return NextResponse.json({ score: scoreData.score });
+        return NextResponse.json({ score: scoreData });
     } catch (parseError) {
         console.error("バックエンドエラー: AIの応答のJSONパースに失敗しました。", parseError);
         // パースに失敗した場合は、生のテキストを返すか、エラーを返す
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error("バックエンドで予期せぬエラーが発生しました:", error);
-    // エラーオブジェクトの構造によって、より詳細な情報をログに出力することも検討　  
+    // エラーオブジェクトの構造によって、より詳細な情報をログに出力することも検討
     let errorMessage = "サーバー内部でエラーが発生しました。";
     if (error instanceof Error) {
         errorMessage = error.message;

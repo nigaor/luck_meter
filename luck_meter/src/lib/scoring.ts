@@ -62,7 +62,7 @@ export const resultScoringFunction: ScoringFunction = async (text: string, categ
       score = 1;
     }
 
-    // 点数の範囲を制限 (例: -10 から +10)
+    // 点数の範囲を制限 (例: -100 から +100)
     return Math.max(-100, Math.min(100, score));
   };
 
