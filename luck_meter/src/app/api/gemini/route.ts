@@ -33,7 +33,8 @@ export async function POST(request: Request) {
       model: `${MODEL_NAME}`,
       contents: {text: userPrompt},
       config: {
-        systemInstruction: "あなたはポジティブ心理学の専門家です。以下の出来事をポジティブ度と重要度（個人的な成長や幸福への貢献など）を考慮して0点から100点で点数化してください。点数のみを返してください。",
+        systemInstruction: 
+        "あなたはポジティブ心理学の専門家です。以下の出来事をポジティブ度と重要度を考慮して、人が死ぬレベルが-100点、何も起きない通常が0点、人生最大レベルの幸福を+100点とした場合を参考に-100点から+100点で点数化してください。またその点数を付けた理由を2行程度の簡単な日本語の文章で評価してください。応答は必ず以下のJSON形式で返してください。\n例: {\"sign\": +,\"score\": 75, \"comment\": \"新しい発見があり、とても充実した一日でしたね。\"}",
       },
     });
 
@@ -45,39 +46,62 @@ export async function POST(request: Request) {
       console.error("バックエンドエラー: Gemini APIから有効なレスポンスが得られませんでした。");
       return NextResponse.json(
         { error: "AIからの応答がありませんでした。" },
-        { status: 502 } // Bad Gateway (AIサービスからの応答不良)
+        { status: 502 }
       );
     }
 
     const generatedText = responseResult.replace(/\n/,'');
     console.log(`バックエンド: Gemini APIからの応答: "${generatedText}"`);
 
-    // 5. クライアントに結果を返す
-    // 今回のユースケースでは点数のみを期待しているので、JSON形式で返すことを想定
-    // AIの応答が {"score": 75} のようなJSON文字列であることを期待
+
     try {
-        const scoreData = JSON.parse(generatedText);
-        return NextResponse.json({ score: scoreData });
-    } catch (parseError) {
-        console.error("バックエンドエラー: AIの応答のJSONパースに失敗しました。", parseError);
-        // パースに失敗した場合は、生のテキストを返すか、エラーを返す
+      const jsonMatch = generatedText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+          console.error("バックエンドエラー: AIの応答がJSON形式ではありません。");
+          return NextResponse.json(
+            { error: "AIの応答が不正な形式です。", rawResponse: jsonMatch },
+            { status: 500 }
+          );
+      }
+      
+      const jsonString = jsonMatch[0];
+      console.log(`バックエンド: AIの応答から抽出したJSON: ${jsonString}`);
+
+      try {
+          const resultData = JSON.parse(jsonString);
+          return NextResponse.json({ sign: resultData.sign, score: resultData.score, comment: resultData.comment });
+      } catch (parseError) {
+          console.error("バックエンドエラー: AIの応答のJSONパースに失敗しました。", parseError);
+          // パースに失敗した場合は、生のテキストを返すか、エラーを返す
+          return NextResponse.json(
+            { error: "AIの応答形式が不正です。", rawResponse: jsonString },
+            { status: 500 }
+          );
+      }
+
+      } catch (error) {
+        console.error("バックエンドで予期せぬエラーが発生しました:", error);
+        // エラーオブジェクトの構造によって、より詳細な情報をログに出力することも検討
+        let errorMessage = "サーバー内部でエラーが発生しました。";
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
         return NextResponse.json(
-          { error: "AIの応答形式が不正です。", rawResponse: generatedText },
+          { error: errorMessage },
           { status: 500 }
         );
+      }
+    } catch (error) {
+      console.error("バックエンドで予期せぬエラーが発生しました:", error);
+      // エラーオブジェクトの構造によって、より詳細な情報をログに出力することも検討
+      let errorMessage = "サーバー内部でエラーが発生しました。";
+      if (error instanceof Error) {
+          errorMessage = error.message;
+      }
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: 500 }
+      );
     }
-
-  } catch (error) {
-    console.error("バックエンドで予期せぬエラーが発生しました:", error);
-    // エラーオブジェクトの構造によって、より詳細な情報をログに出力することも検討
-    let errorMessage = "サーバー内部でエラーが発生しました。";
-    if (error instanceof Error) {
-        errorMessage = error.message;
-    }
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
   }
-}
 

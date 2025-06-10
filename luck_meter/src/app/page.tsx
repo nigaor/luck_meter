@@ -33,14 +33,13 @@
        }
      }
    }, [events]);
-   const handleAddEvent = async (eventText: string, category?: string) => {
-     const score = await resultScoringFunction(eventText, category);
+   const handleAddEvent = async (eventText: string) => {
+     const score = await resultScoringFunction(eventText);
      const newEvent: EventItem = {
        id: crypto.randomUUID(),
        text: eventText,
        score: typeof score === 'number' ? score : 0,
        createdAt: new Date(),
-       category: category,
      };
      setEvents((prevEvents) => [...prevEvents, newEvent]);
    };

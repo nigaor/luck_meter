@@ -56,11 +56,6 @@ export default function EventList({ events, onDeleteEvent }: EventListProps) {
                         記録日時: {new Date(event.createdAt).toLocaleString('ja-JP')}
                       </p>
                     </div>
-                    {event.category && (
-                      <span className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {event.category}
-                      </span>
-                    )}
                   </div>
                   <div>
                     <button

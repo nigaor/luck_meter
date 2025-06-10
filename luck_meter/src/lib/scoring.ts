@@ -1,6 +1,6 @@
 import { ScoringFunction } from '@/types';
 
-export const resultScoringFunction: ScoringFunction = async (text: string, category?: string): Promise<number> => {
+export const resultScoringFunction: ScoringFunction = async (text: string): Promise<number> => {
   // API経由でスコア取得
   const aiScoringFunction: ScoringFunction = async (text): Promise<number> => {
     try {
