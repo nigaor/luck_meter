@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       contents: {text: userPrompt},
       config: {
         systemInstruction: 
-        "あなたはポジティブ心理学の専門家です。以下の出来事をポジティブ度と重要度を考慮して、人が死ぬレベルが-100点、何も起きない通常が0点、人生最大レベルの幸福を+100点とした場合を参考に-100点から+100点で点数化してください。またその点数を付けた理由を2行程度の簡単な日本語の文章で評価してください。応答は必ず以下のJSON形式で返してください。\n例: {\"sign\": +,\"score\": 75, \"comment\": \"新しい発見があり、とても充実した一日でしたね。\"}",
+        "あなたはポジティブ心理学の専門家です。以下の出来事をポジティブ度と重要度を考慮して、人が死ぬレベルが-100点、何も起きない通常が0点、人生最大レベルの幸福を+100点とした場合を参考に-100点から+100点で点数化してください。またその点数を付けた理由を2行程度の簡単な日本語の文章で評価してください。応答は必ず以下のJSON形式で返してください。\n例: {\"score\": 75, \"comment\": \"新しい発見があり、とても充実した一日でしたね。\"}",
       },
     });
 
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
       try {
           const resultData = JSON.parse(jsonString);
-          return NextResponse.json({ sign: resultData.sign, score: resultData.score, comment: resultData.comment });
+          return NextResponse.json({score: resultData.score, comment: resultData.comment });
       } catch (parseError) {
           console.error("バックエンドエラー: AIの応答のJSONパースに失敗しました。", parseError);
           // パースに失敗した場合は、生のテキストを返すか、エラーを返す
