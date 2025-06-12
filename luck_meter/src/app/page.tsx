@@ -11,7 +11,7 @@
      const storedEvents = localStorage.getItem('dailyEvents');
      if (storedEvents) {
        try {
-         const parsedEvents: EventItem[] = JSON.parse(storedEvents).map((event: any) => ({
+         const parsedEvents: EventItem[] = JSON.parse(storedEvents).map((event:EventItem) => ({
            ...event,
            createdAt: new Date(event.createdAt),
          }));

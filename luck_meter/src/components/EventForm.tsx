@@ -3,19 +3,17 @@
 import { useState, FormEvent } from 'react';
 
 interface EventFormProps {
-  onAddEvent: (eventText: string) => void; // categoryも渡せるように変更
+  onAddEvent: (eventText: string) => void;
 }
 
 export default function EventForm({ onAddEvent }: EventFormProps) {
   const [eventText, setEventText] = useState('');
-  const [category, setCategory] = useState('');
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!eventText.trim()) return;
     onAddEvent(eventText); 
     setEventText('');
-    setCategory('');
   };
 
   return (
