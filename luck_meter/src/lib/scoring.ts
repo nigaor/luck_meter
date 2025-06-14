@@ -1,8 +1,8 @@
 import { ScoringFunction } from '@/types';
 
-export const resultScoringFunction: ScoringFunction = async (text: string): Promise<number> => {
+export const resultScoringFunction: ScoringFunction = async (text: string): Promise<{score:number;comment:string}> => {
   // API経由でスコア取得
-  const aiScoringFunction: ScoringFunction = async (text): Promise<number> => {
+  const aiScoringFunction: ScoringFunction = async (text): Promise<{score:number; comment:string}> => {
     try {
       const res = await fetch('/api/gemini', {
         method: 'POST',
@@ -21,7 +21,7 @@ export const resultScoringFunction: ScoringFunction = async (text: string): Prom
         throw new Error(`AIからの点数解析に失敗しました。: ${JSON.stringify(data)}`);
       }
       // 必要に応じてスコア範囲を制限
-      return Math.max(-100, Math.min(100, data.score));
+      return { score: Math.max(-100, Math.min(100, data.score)), comment: data.comment };
     } catch (error) {
       console.error("AI点数化エラー:デフォルトスコアを使用します", error);
       return simpleScoringFunction(text);
@@ -29,7 +29,7 @@ export const resultScoringFunction: ScoringFunction = async (text: string): Prom
   };
 
   // 簡易的なキーワードベースの点数化ロジック
-  const simpleScoringFunction: ScoringFunction = async (text): Promise<number> => {
+  const simpleScoringFunction: ScoringFunction = async (text): Promise<{score:number,comment:string}> => {
     let score = 0;
     const lowerText = text.toLowerCase();
 
@@ -63,7 +63,7 @@ export const resultScoringFunction: ScoringFunction = async (text: string): Prom
     }
 
     // 点数の範囲を制限 (例: -100 から +100)
-    return Math.max(-100, Math.min(100, score));
+    return { score: Math.max(-100, Math.min(100, score)), comment: "簡易スコアリングによる評価です。"};
   };
 
   return aiScoringFunction(text);

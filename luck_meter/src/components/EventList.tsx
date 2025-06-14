@@ -33,29 +33,31 @@ export default function EventList({ events, onDeleteEvent }: EventListProps) {
       <ul role="list" className="-mb-8">
         {events
           .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-          .map((event, eventIdx) => (
+          .map((event) => (
             <li key={event.id}>
-              <div className="relative pb-8">
-                {eventIdx !== events.length - 1 ? (
-                  <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true" />
-                ) : null}
+              <div className="relative my-1 p-8 bg-white text-center rounded-xl shadow-lg pb-8">
                 <div className="relative flex items-start space-x-3">
-                  <div>
-                    <div
-                      className={`relative px-2 py-1 text-xs font-semibold rounded-full ring-1 ring-inset ${getScoreClass(event.score)}`}
-                    >
-                      スコア: {event.score > 0 ? `+${event.score}` : event.score}
-                    </div>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div>
-                      <div className="text-sm">
-                        <p className="font-medium text-gray-900">{event.text}</p>
+                  <div className="min-w-0 flex-1 ">
+                    <div className="text-sm mt-4 flex flex-col gap-1">
+                      <div className="rounded-2xl px-6 py-4 mb-2 inline-block bg-pink-100" >
+                        <p className="font-medium text-pink-400">出来事：
+                          <span className="text-gray-900">{event.text}</span>
+                        </p>
                       </div>
-                      <p className="mt-0.5 text-xs text-gray-500">
-                        記録日時: {new Date(event.createdAt).toLocaleString('ja-JP')}
-                      </p>
+                      <div className="rounded-2xl px-6 py-4 mb-2 inline-block bg-indigo-100">
+                        <p className="font-medium text-indigo-500">AIのコメント：
+                          <span className="text-gray-900">{event.comment}</span>
+                        </p>
+                      </div>
                     </div>
+                    <span
+                    className={`relative px-2 py-1 text-xs font-semibold rounded-full ring-1 ring-inset ${getScoreClass(event.score)}`}
+                    >
+                    スコア:{event.score > 0 ? `+${event.score}` : event.score}
+                    </span>
+                    <footer className="mt-0.5 text-xs text-gray-500">
+                      記録日時: {new Date(event.createdAt).toLocaleString('ja-JP')}
+                    </footer>
                   </div>
                   <div>
                     <button

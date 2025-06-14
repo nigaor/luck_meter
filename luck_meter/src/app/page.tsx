@@ -7,6 +7,7 @@
  import { resultScoringFunction } from '@/lib/scoring';
  export default function HomePage() {
    const [events, setEvents] = useState<EventItem[]>([]);
+   const [isModalOpen, setIsModalOpen] = useState(false);
    useEffect(() => {
      const storedEvents = localStorage.getItem('dailyEvents');
      if (storedEvents) {
@@ -33,16 +34,22 @@
        }
      }
    }, [events]);
+
+   const openModal = () => setIsModalOpen(true);
+   const closeModal = () => setIsModalOpen(false);
+
    const handleAddEvent = async (eventText: string) => {
-     const score = await resultScoringFunction(eventText);
+     const data = await resultScoringFunction(eventText);
      const newEvent: EventItem = {
        id: crypto.randomUUID(),
        text: eventText,
-       score: typeof score === 'number' ? score : 0,
+       score: typeof data.score === 'number' ? data.score : 0,
+       comment: data.comment,
        createdAt: new Date(),
      };
      setEvents((prevEvents) => [...prevEvents, newEvent]);
    };
+
    const handleDeleteEvent = (id: string) => {
      setEvents(prevEvents => prevEvents.filter(event => event.id !== id));
    };
@@ -66,11 +73,11 @@
              日常の出来事を記録して、ポジティブな毎日を！
            </p>
          </header>
-         <EventForm onAddEvent={handleAddEvent} />
          {events.length > 0 && (
            <div className="my-10 p-6 bg-white rounded-xl shadow-lg">
              <h2 className="text-2xl font-semibold text-gray-700 text-center">
-               今日の合計スコア: <span className={`font-bold ${getTotalScoreClass(totalScore)}`}>{totalScore > 0 ? `+${totalScore}`: totalScore}</span>
+               現在の合計スコア <br/>
+               <span className={`font-bold text-5xl ${getTotalScoreClass(totalScore)}`}>{totalScore > 0 ? `+${totalScore}`: totalScore}</span>
              </h2>
            </div>
          )}
@@ -79,6 +86,39 @@
            <p>&copy; {new Date().getFullYear()} Daily Event Scorer. (Sample App)</p>
          </footer>
        </main>
+       <button
+          onClick={openModal}
+          className="fixed top-16 right-16 z-40 flex h-16 w-32 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg transition-all duration-300 hover:bg-indigo-700 hover:scale-150"
+          >
+            ＋出来事を追加
+          </button>
+          {isModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
+            onClick={closeModal}
+            >
+              <div
+                className="relative bg-white p-8 rounded-2xl shadow-xl z-10 max-w-lg w-full m-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button 
+                  onClick={closeModal}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label="閉じる"
+                  >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                <h2 className="text-2xl font-semibold mb-4 text-gray-800">新しい出来事を記録</h2>
+                <EventForm
+                  onAddEvent={(eventText) => {
+                    handleAddEvent(eventText);
+                    closeModal();
+                  }}
+                />
+              </div>
+            </div>
+          )}
      </div>
    );
  }
