@@ -19,10 +19,10 @@ export default function EventList({ events, onDeleteEvent }: EventListProps) {
   }
 
   const getScoreClass = (score: number): string => {
-    if (score > 5) return 'bg-green-100 text-green-800';
+    if (score > 50) return 'bg-green-100 text-green-800';
     if (score > 0) return 'bg-green-50 text-green-700';
     if (score === 0) return 'bg-gray-100 text-gray-800';
-    if (score < -5) return 'bg-red-100 text-red-800';
+    if (score < -50) return 'bg-red-100 text-red-800';
     if (score < 0) return 'bg-red-50 text-red-700';
     return 'bg-gray-100 text-gray-800'; // デフォルト 
   };
