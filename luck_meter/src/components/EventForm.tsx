@@ -9,11 +9,18 @@ interface EventFormProps {
 export default function EventForm({ onAddEvent }: EventFormProps) {
   const [eventText, setEventText] = useState('');
 
+  // フォーム送信時のハンドラー
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!eventText.trim()) return;
     onAddEvent(eventText); 
     setEventText('');
+  };
+  // Enterキーでの送信を防ぐためのハンドラー
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -26,9 +33,11 @@ export default function EventForm({ onAddEvent }: EventFormProps) {
           id="eventText"
           value={eventText}
           onChange={(e) => setEventText(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="例: 新しいカフェで美味しいコーヒーを飲んだ"
-          rows={4}
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out sm:text-sm"
+          rows={2}
+          maxLength={50}
+          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm  resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out sm:text-sm}"
           required
         />
       </div>
