@@ -28,53 +28,55 @@ export default function EventList({ events, onDeleteEvent }: EventListProps) {
   };
 
   return (
-    <div className="flow-root">
-      <h2 className="text-xl font-semibold mb-6 text-gray-800">記録された出来事</h2>
-      <ul role="list" className="-mb-8">
-        {events
-          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-          .map((event) => (
-            <li key={event.id}>
-              <div className="relative my-1 p-8 bg-white text-center rounded-xl shadow-lg pb-8">
-                <div className="relative flex items-start space-x-3">
-                  <div className="min-w-0 flex-1 ">
-                    <div className="text-sm mt-4 flex flex-col gap-1">
-                      <div className="rounded-2xl px-6 py-4 mb-2 inline-block bg-pink-100" >
-                        <p className="font-medium text-pink-400">出来事：
-                          <span className="text-gray-900">{event.text}</span>
-                        </p>
-                      </div>
-                      <div className="rounded-2xl px-6 py-4 mb-2 inline-block bg-indigo-100">
-                        <p className="font-medium text-indigo-500">AIのコメント：
-                          <span className="text-gray-900">{event.comment}</span>
-                        </p>
-                      </div>
-                    </div>
-                    <span
-                    className={`relative px-2 py-1 text-xs font-semibold rounded-full ring-1 ring-inset ${getScoreClass(event.score)}`}
-                    >
-                    スコア:{event.score > 0 ? `+${event.score}` : event.score}
-                    </span>
-                    <footer className="mt-0.5 text-xs text-gray-500">
-                      記録日時: {new Date(event.createdAt).toLocaleString('ja-JP')}
-                    </footer>
-                  </div>
-                  <div>
-                    <button
-                      onClick={() => onDeleteEvent(event.id)}
-                      className="ml-2 text-gray-400 hover:text-red-600 transition-colors p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                      aria-label={`出来事「${event.text}」を削除`}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
+<div className="flow-root">
+  <h2 className="text-xl font-semibold mb-6 text-gray-800">記録された出来事</h2>
+  
+  <ul role="list" className="space-y-6">
+    {events
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .map((event) => (
+        <li key={event.id}>
+          <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 space-y-4">
+            <div className="flex justify-between items-start">
+              <div 
+                className={`inline-flex items-baseline px-4 py-1.5 text-base font-bold rounded-full ${getScoreClass(event.score)}`}
+              >
+                <span className="mr-2 text-sm font-semibold opacity-80">SCORE</span>
+                <span className="text-2xl leading-none">
+                  {event.score > 0 ? `+${event.score}` : event.score}
+                </span>
               </div>
-            </li>
-        ))}
-      </ul>
-    </div>
+              
+              <button
+                onClick={() => onDeleteEvent(event.id)}
+                className="text-gray-400 hover:text-red-600 transition-colors p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                aria-label={`出来事「${event.text}」を削除`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-4 border-t border-gray-100 pt-4">
+              <div>
+                <p className="text-sm font-semibold text-gray-500 mb-1">あなたの出来事</p>
+                <p className="text-gray-800 leading-relaxed bg-pink-100 rounded-2xl p-5">{event.text}</p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-indigo-500 mb-1">AIのコメント</p>
+                <p className="text-gray-800 leading-relaxed bg-indigo-100 rounded-2xl p-5">{event.comment}</p>
+              </div>
+            </div>
+
+            <div className="text-right text-xs text-gray-400 border-t border-gray-100 pt-2">
+              記録日時: {new Date(event.createdAt).toLocaleString('ja-JP')}
+            </div>
+            
+          </div>
+        </li>
+      ))}
+  </ul>
+</div>
   );
 }

@@ -8,6 +8,7 @@
  export default function HomePage() {
    const [events, setEvents] = useState<EventItem[]>([]);
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [isError, setIsError] = useState(false);
    useEffect(() => {
      const storedEvents = localStorage.getItem('dailyEvents');
      if (storedEvents) {
@@ -36,9 +37,13 @@
    }, [events]);
 
    const openModal = () => setIsModalOpen(true);
-   const closeModal = () => setIsModalOpen(false);
+   const closeModal = () => {
+    setIsModalOpen(false);
+    setIsError(false);
+  }
 
    const handleAddEvent = async (eventText: string) => {
+    try {
      const data = await resultScoringFunction(eventText);
      const newEvent: EventItem = {
        id: crypto.randomUUID(),
@@ -48,6 +53,12 @@
        createdAt: new Date(),
      };
      setEvents((prevEvents) => [...prevEvents, newEvent]);
+    } catch (error) {
+      console.error("不正な処理", error);
+      if (error instanceof Error) {
+      setIsError(true);
+      }
+    }
    };
 
    const handleDeleteEvent = (id: string) => {
@@ -66,12 +77,15 @@
      <div className="min-h-screen bg-gradient-to-br from-slate-100 to-sky-100 py-6 sm:py-12">
        <main className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
          <header className="mb-12 text-center">
-           <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-500 pb-2">
+           <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-500 pb-2">
              Luck Meter
            </h1>
-           <p className="text-lg text-gray-600">
-             日常の出来事を記録して、ポジティブな毎日を！
-           </p>
+           <div className="text-lg text-gray-600 text-left">
+             ・日々の出来事を記録し、AIがポジティブ度をスコア化します。<br/>
+             ・「＋出来事を追加」ボタンから新しい出来事を追加することで、
+             スコアとAIコメントが自動的に生成されます。<br/>
+             ・点数は-100から+100の範囲で、大きな出来事ほど高いスコアがつきます。<br/>
+           </div>
          </header>
          {events.length > 0 && (
            <div className="my-10 p-6 bg-white rounded-xl shadow-lg">
@@ -88,11 +102,11 @@
        </main>
        <button
           onClick={openModal}
-          className="fixed top-16 right-16 z-40 flex h-16 w-32 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg transition-all duration-300 hover:bg-indigo-700 hover:scale-150"
+          className="fixed top-16 right-16 z-40 flex h-16 w-32 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg transition-all duration-300 hover:bg-indigo-700 hover:scale-120"
           >
             ＋出来事を追加
           </button>
-          {isModalOpen && (
+          { (isModalOpen || isError) && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
             onClick={closeModal}
             >
@@ -110,6 +124,13 @@
                   </svg>
                 </button>
                 <h2 className="text-2xl font-semibold mb-4 text-gray-800">新しい出来事を記録</h2>
+                {isError && (
+                  <div className="mb-4 text-red-600">
+                    文章が正しく読み取れなかったためスコアの取得に<br/>
+                    失敗しました。<br/>
+                    再度入力してください。
+                  </div>
+                )}
                 <EventForm
                   onAddEvent={(eventText) => {
                     handleAddEvent(eventText);

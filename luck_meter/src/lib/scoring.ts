@@ -11,8 +11,8 @@ export const resultScoringFunction: ScoringFunction = async (text: string): Prom
       });
 
       if (!res.ok) {
-        console.warn("AI APIからの応答が不正です。デフォルトスコアを使用します。");
-        return simpleScoringFunction(text);
+        const errorData = await res.json().catch(() => ({ error: "サーバーからの応答が不正です。"}));
+        throw new Error(errorData.error || `サーバーエラー：${res.status}`)
       }
 
       const data = await res.json();
@@ -23,47 +23,9 @@ export const resultScoringFunction: ScoringFunction = async (text: string): Prom
       // 必要に応じてスコア範囲を制限
       return { score: Math.max(-100, Math.min(100, data.score)), comment: data.comment };
     } catch (error) {
-      console.error("AI点数化エラー:デフォルトスコアを使用します", error);
-      return simpleScoringFunction(text);
+    console.error("AIスコアリング関数でエラー:", error);
+    throw error;
     }
-  };
-
-  // 簡易的なキーワードベースの点数化ロジック
-  const simpleScoringFunction: ScoringFunction = async (text): Promise<{score:number,comment:string}> => {
-    let score = 0;
-    const lowerText = text.toLowerCase();
-
-    // ポジティブキーワード
-    const positiveKeywords = ['嬉しい', '楽しい', '最高', '成功', '達成', '感謝', '素晴らしい', 'おいしい', 'リラックス'];
-    positiveKeywords.forEach(keyword => {
-      if (lowerText.includes(keyword)) {
-        score += 5;
-      }
-    });
-
-    // ネガティブキーワード
-    const negativeKeywords = ['悲しい', '辛い', '疲れた', '失敗', '問題', '残念', 'ストレス'];
-    negativeKeywords.forEach(keyword => {
-      if (lowerText.includes(keyword)) {
-        score -= 3;
-      }
-    });
-
-    // 長さボーナス (少しだけ)
-    if (text.length > 50) {
-      score += 1;
-    }
-    if (text.length > 100) {
-      score += 1;
-    }
-
-    // 基本スコア（何もなければ0点にならないように）
-    if (score === 0 && text.length > 0) {
-      score = 1;
-    }
-
-    // 点数の範囲を制限 (例: -100 から +100)
-    return { score: Math.max(-100, Math.min(100, score)), comment: "簡易スコアリングによる評価です。"};
   };
 
   return aiScoringFunction(text);
