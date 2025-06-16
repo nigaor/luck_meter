@@ -19,10 +19,10 @@ export default function EventList({ events, onDeleteEvent }: EventListProps) {
   }
 
   const getScoreClass = (score: number): string => {
-    if (score > 50) return 'bg-green-100 text-green-800';
-    if (score > 0) return 'bg-green-50 text-green-700';
+    if (score >= 90) return 'bg-yellow-50 text-yellow-600';
+    if (score > 0) return 'bg-green-50 text-green-600';
     if (score === 0) return 'bg-gray-100 text-gray-800';
-    if (score < -50) return 'bg-red-100 text-red-800';
+    if (score <= -90) return 'bg-gray-100 text-gray-800';
     if (score < 0) return 'bg-red-50 text-red-700';
     return 'bg-gray-100 text-gray-800'; // デフォルト 
   };
@@ -37,7 +37,8 @@ export default function EventList({ events, onDeleteEvent }: EventListProps) {
       .map((event) => (
         <li key={event.id}>
           <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 space-y-4">
-            <div className="flex justify-between items-start">
+            <div className="relative">
+              <div className="flex justify-center">
               <div 
                 className={`inline-flex items-baseline px-4 py-1.5 text-base font-bold rounded-full ${getScoreClass(event.score)}`}
               >
@@ -46,18 +47,17 @@ export default function EventList({ events, onDeleteEvent }: EventListProps) {
                   {event.score > 0 ? `+${event.score}` : event.score}
                 </span>
               </div>
-              
               <button
                 onClick={() => onDeleteEvent(event.id)}
-                className="text-gray-400 hover:text-red-600 transition-colors p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                className="absolute top-0 right-0 text-gray-400 hover:text-red-600 transition-colors p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 aria-label={`出来事「${event.text}」を削除`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
               </button>
+              </div>
             </div>
-
             <div className="space-y-4 border-t border-gray-100 pt-4">
               <div>
                 <p className="text-sm font-semibold text-gray-500 mb-1">あなたの出来事</p>
