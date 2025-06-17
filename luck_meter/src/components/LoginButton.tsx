@@ -13,7 +13,7 @@ export default function LoginButton() {
   // ログインしている場合
   if (session) {
     return (
-      <div>
+      <div className="fixed top-32 right-16 ">
         <p>ようこそ, {session.user?.name} さん</p>
         <button onClick={() => signOut()}>ログアウト</button>
       </div>
@@ -22,7 +22,7 @@ export default function LoginButton() {
 
   // ログインしていない場合
   return (
-    <div>
+    <div className="fixed top-32 right-16">
       <p>ログインしていません</p>
       <button onClick={() => signIn("google")}>Googleでログイン</button>
     </div>

@@ -5,6 +5,8 @@
  import EventForm from '@/components/EventForm';
  import EventList from '@/components/EventList';
  import { resultScoringFunction } from '@/lib/scoring';
+ import  LoginButton  from '@/components/LoginButton';
+
  export default function HomePage() {
    const [events, setEvents] = useState<EventItem[]>([]);
    const [isModalOpen, setIsModalOpen] = useState(false);
@@ -101,6 +103,7 @@
            <p>&copy; {new Date().getFullYear()} Daily Event Scorer. (Sample App)</p>
          </footer>
        </main>
+        <LoginButton />
        <button
           onClick={openModal}
           className="fixed top-16 right-16 z-40 flex h-16 w-32 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg transition-all duration-300 hover:bg-indigo-700 hover:scale-120"
