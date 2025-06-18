@@ -11,6 +11,7 @@
    const [events, setEvents] = useState<EventItem[]>([]);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [isError, setIsError] = useState(false);
+   
    useEffect(() => {
      const storedEvents = localStorage.getItem('dailyEvents');
      if (storedEvents) {
