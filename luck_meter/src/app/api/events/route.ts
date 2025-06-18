@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { auth } from '@/auth'; // Auth.js v5のヘルパー
+import { auth } from '@/auth';
 
-// ログインユーザーのイベント一覧を取得する (GET)
 export async function GET() {
   const session = await auth();
-
   if (!session?.user?.id) {
     return NextResponse.json({ error: '認証されていません' }, { status: 401 });
   }

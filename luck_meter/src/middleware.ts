@@ -29,5 +29,6 @@ export const config = {
   matcher: [
     // APIルート, Next.jsの内部ファイル, 静的ファイルなどを除外する正規表現
     '/((?!api|_next/static|_next/image|.*\\.png$).*)',
+    "/dashboard/:path*",
   ],
 };

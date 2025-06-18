@@ -11,33 +11,32 @@
    const [events, setEvents] = useState<EventItem[]>([]);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [isError, setIsError] = useState(false);
-   
+   const [isLoading, setIsLoading] = useState(false);
+
    useEffect(() => {
-     const storedEvents = localStorage.getItem('dailyEvents');
-     if (storedEvents) {
-       try {
-         const parsedEvents: EventItem[] = JSON.parse(storedEvents).map((event:EventItem) => ({
-           ...event,
-           createdAt: new Date(event.createdAt),
-         }));
-         setEvents(parsedEvents);
-       } catch (error) {
-         console.error("Failed to parse events from localStorage", error);
-         localStorage.removeItem('dailyEvents');
-       }
-     }
-   }, []);
-   useEffect(() => {
-     if (events.length > 0) {
-       localStorage.setItem('dailyEvents', JSON.stringify(events));
-     } else {
-       // イベントが0件になったらローカルストレージからも削除    
-       const storedEvents = localStorage.getItem('dailyEvents');
-       if(storedEvents) {
-         localStorage.removeItem('dailyEvents');
-       }
-     }
-   }, [events]);
+     const fetchEvents = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/events');
+        if (!response.ok) {
+          throw new Error('イベントの取得に失敗しました');
+        }
+
+        const data: EventItem[] = await response.json();
+        const formattedEvents = data.map(event => ({
+          ...event,
+          createdAt: new Date(event.createdAt),
+        }));
+        setEvents(formattedEvents);
+      } catch (error) {
+          console.error("イベントの取得エラー:");
+          setIsError(true);
+      } finally {
+          setIsLoading(false);
+      }
+     };
+     fetchEvents();
+       }, []);
 
    const openModal = () => setIsModalOpen(true);
    const closeModal = () => {
@@ -55,18 +54,60 @@
        comment: data.comment,
        createdAt: new Date(),
      };
-     setEvents((prevEvents) => [...prevEvents, newEvent]);
+      const response = await fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          text: eventText,
+          score:data.score,
+          comment:data.comment,
+        }),
+      });
+      if(!response.ok) {
+        throw new Error('イベントの追加に失敗しました');
+    }
+    const newEventFromDb: EventItem = await response.json();
+    const formattedNewEvent = { ...newEventFromDb, createdAt: new Date(newEventFromDb.createdAt) };
+    
+    setEvents(prevEvents => [formattedNewEvent, ...prevEvents]);
     } catch (error) {
-      console.error("不正な処理", error);
-      if (error instanceof Error) {
-      setIsError(true);
-      }
+        console.error("イベント追加エラー:");
+        setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
    };
 
-   const handleDeleteEvent = (id: string) => {
+   const handleDeleteEvent = async (id: string) => {
      setEvents(prevEvents => prevEvents.filter(event => event.id !== id));
-   };
+ 
+
+   try {
+    const response = await fetch(`/api/events/${id}`,{
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error('イベントの削除に失敗しました');
+    }
+   } catch (error) {
+    if (error instanceof Error) {
+      console.error("イベント削除エラー:", error.message);
+      setIsError(true);
+      }
+    };
+  }
+
+  if (isLoading) return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 to-sky-100">
+      <div className="text-gray-600 text-lg">Loading...</div>
+    </div>
+  )
+  if (isError) return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 to-sky-100">
+      <div className="text-red-600 text-lg">エラーが発生しました。もう一度お試しください。</div>
+    </div>
+  );
+
    const totalScore = events.reduce((sum, event) => sum + event.score, 0);
    const getTotalScoreClass = (score: number): string => {
      if (score > 10) return 'text-green-600';

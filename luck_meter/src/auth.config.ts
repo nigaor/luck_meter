@@ -11,24 +11,16 @@ export const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  // // 認証ロジックをここに記述（後述）
-  // callbacks: {
-  //   authorized({ auth, request: { nextUrl } }) {
-  //     const isLoggedIn = !!auth?.user;
-  //     const isOnLoginPage = nextUrl.pathname.startsWith("/login");
-  //     const isOnDashboard = nextUrl.pathname.startsWith("/dashboard"); 
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
 
-  //     if (isOnDashboard) {
-  //       if (isLoggedIn) return true;
-  //       return false;
-  //     } else if (isOnLoginPage) {
-  //       if (isLoggedIn) {
-  //         return Response.redirect(new URL("/", nextUrl));
-  //       }
-  //       return true;
-  //     }
-
-  //     return true;
-  //   },
-  // },
+      if (isOnDashboard) {
+        if (isLoggedIn) return true;
+        return false;
+      }
+      return true;
+    },
+  },
 } satisfies NextAuthConfig;

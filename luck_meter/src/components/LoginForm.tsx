@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+ import  LoginButton  from '@/components/LoginButton';
 
 export default function LoginForm() {
   return (
@@ -18,6 +19,7 @@ export default function LoginForm() {
       {/* ここに追加のプロバイダー（GitHubなど）や、
         メール/パスワード用の入力フォームを配置することもできます。
       */}
+      <LoginButton />
     </div>
   );
 }
