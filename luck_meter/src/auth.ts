@@ -13,13 +13,23 @@ export const {
   ...authConfig,
 
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
   secret: process.env.AUTH_SECRET,
 
   callbacks: {
     ...authConfig.callbacks,
-    session({ session, user }) {
-      session.user.id = user.id;
+
+        jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+
+    session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
       return session;
     },
   },
