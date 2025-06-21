@@ -10,7 +10,7 @@
  export default function HomePage() {
    const [events, setEvents] = useState<EventItem[]>([]);
    const [isModalOpen, setIsModalOpen] = useState(false);
-   const [isError, setIsError] = useState(false);
+   const [isTextError, setIsTextError] = useState(false);
    const [isLoading, setIsLoading] = useState(false);
 
    useEffect(() => {
@@ -19,7 +19,7 @@
         setIsLoading(true);
         const response = await fetch('/api/events');
         if (!response.ok) {
-          throw new Error('イベントの取得に失敗しました');
+          throw new Error('イベントデータの取得に失敗しました');
         }
 
         const data: EventItem[] = await response.json();
@@ -29,8 +29,7 @@
         }));
         setEvents(formattedEvents);
       } catch (error) {
-          console.error("イベントの取得エラー:");
-          setIsError(true);
+          console.error("イベントデータの取得エラー:");
       } finally {
           setIsLoading(false);
       }
@@ -41,19 +40,13 @@
    const openModal = () => setIsModalOpen(true);
    const closeModal = () => {
     setIsModalOpen(false);
-    setIsError(false);
+    setIsTextError(false);
   }
 
    const handleAddEvent = async (eventText: string) => {
     try {
+     setIsLoading(true);
      const data = await resultScoringFunction(eventText);
-     const newEvent: EventItem = {
-       id: crypto.randomUUID(),
-       text: eventText,
-       score: typeof data.score === 'number' ? data.score : 0,
-       comment: data.comment,
-       createdAt: new Date(),
-     };
       const response = await fetch('/api/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,17 +64,16 @@
     
     setEvents(prevEvents => [formattedNewEvent, ...prevEvents]);
     } catch (error) {
-        console.error("イベント追加エラー:");
-        setIsError(true);
+        console.error("イベント追加エラー:", error);
+        setIsTextError(true);
     } finally {
       setIsLoading(false);
     }
    };
 
    const handleDeleteEvent = async (id: string) => {
-     setEvents(prevEvents => prevEvents.filter(event => event.id !== id));
+    setEvents(prevEvents => prevEvents.filter(event => event.id !== id));
  
-
    try {
     const response = await fetch(`/api/events/${id}`,{
       method: 'DELETE',
@@ -91,8 +83,7 @@
     }
    } catch (error) {
     if (error instanceof Error) {
-      console.error("イベント削除エラー:", error.message);
-      setIsError(true);
+      console.error("イベント削除エラー:", error);
       }
     };
   }
@@ -102,11 +93,6 @@
       <div className="text-gray-600 text-lg">Loading...</div>
     </div>
   )
-  if (isError) return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 to-sky-100">
-      <div className="text-red-600 text-lg">エラーが発生しました。もう一度お試しください。</div>
-    </div>
-  );
 
    const totalScore = events.reduce((sum, event) => sum + event.score, 0);
    const getTotalScoreClass = (score: number): string => {
@@ -152,7 +138,7 @@
           >
             ＋出来事を追加
           </button>
-          { (isModalOpen || isError) && (
+          { (isModalOpen || isTextError) && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
             onClick={closeModal}
             >
@@ -171,10 +157,10 @@
                 </button>
                 <h2 className="text-2xl font-semibold mb-4 text-gray-800">新しい出来事を記録</h2>
                 {/* 意味の通じない文章を送信した際に表示されるエラー文 */}
-                {isError && (
+                {isTextError && (
                   <div className="mb-4 text-red-600">
-                    文章が正しく読み取れなかったためスコアの取得に<br/>
-                    失敗しました。再度入力してください。
+                    文章から正しくスコアを生成できませんでした。<br/>
+                    再度入力してください。
                   </div>
                 )}
                 <EventForm

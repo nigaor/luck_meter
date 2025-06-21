@@ -19,7 +19,7 @@ export const {
   callbacks: {
     ...authConfig.callbacks,
 
-        jwt({ token, user }) {
+      jwt({ token, user }) {
       if (user) {
         token.id = user.id;
       }

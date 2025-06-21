@@ -16,9 +16,6 @@ export default function LoginForm() {
       >
         Googleでログイン
       </button>
-      {/* ここに追加のプロバイダー（GitHubなど）や、
-        メール/パスワード用の入力フォームを配置することもできます。
-      */}
       <LoginButton />
     </div>
   );

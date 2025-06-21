@@ -26,7 +26,9 @@ export async function POST(request: Request) {
 
   try {
     const { text, score, comment } = await request.json();
-
+    if(score === 0) {
+      return NextResponse.json({ error: 'スコアが0のイベントは追加できません' }, { status: 400 });
+    }
     const newEvent = await prisma.event.create({
       data: {
         text,

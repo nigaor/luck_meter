@@ -7,7 +7,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const session = await auth();
-  const eventId = params.id;
+  const eventId = await params.id;
 
   if (!session?.user?.id) {
     return NextResponse.json({ error: '認証されていません' }, { status: 401 });
