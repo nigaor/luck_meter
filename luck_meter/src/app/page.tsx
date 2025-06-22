@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { isToday, isThisMonth, isThisYear } from 'date-fns';
 import { EventItem } from '@/types';
 import { resultScoringFunction } from '@/lib/scoring';
 import EventList from '@/components/EventList';
@@ -8,12 +9,18 @@ import PageHeader from '@/components/PageHeader';
 import TotalScore from '@/components/TotalScore';
 import AddEventButton from '@/components/AddEventButton';
 import AddEventModal from '@/components/AddEventModal';
+import FilterControls, { FilterType } from '@/components/FilterControls';
+import CalendarModal from '@/components/CalendarModal';
+
 
 export default function HomePage() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTextError, setIsTextError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [filterType, setFilterType] = useState<FilterType>("all");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -66,28 +73,68 @@ export default function HomePage() {
     const originalEvents = [...events];
     setEvents(prevEvents => prevEvents.filter(event => event.id !== id));
     try {
-      const response = await fetch(`/api/events/${id}`, { method: 'DELETE' });
-      if (!response.ok) throw new Error('イベントの削除に失敗しました');
+      const response = await fetch(`/api/events/${id}`,
+        { method: 'DELETE' });
+      if (!response.ok) 
+        throw new Error('イベントの削除に失敗しました');
     } catch (error) {
       console.error("イベント削除エラー:", error);
       setEvents(originalEvents); 
     }
   };
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    setFilterType("date"); 
+    setIsCalendarOpen(false);
+  };
+  
+  const handleFilterChange = (filter: FilterType) => {
+    setFilterType(filter);
+    if (filter !== "date") {
+      setSelectedDate(undefined); // 他のフィルターが選ばれたら日付選択はリセット
+    }
+  };
+
+  const filteredEvents = events.filter(event => {
+    const eventDate = new Date(event.createdAt);
+    switch (filterType) {
+      case "today":
+        return isToday(eventDate);
+      case "thisMonth":
+        return isThisMonth(eventDate);
+      case "thisYear":
+        return isThisYear(eventDate);
+      case "date":
+        // selectedDateが未選択の場合は何も表示しない（またはすべて表示）
+        return selectedDate
+          ? eventDate.toDateString() === selectedDate.toDateString()
+          : true; 
+      case "all":
+      default:
+        return true;
+    }
+  });
 
   const totalScore = events.reduce((sum, event) => sum + (event.score || 0), 0);
+
   if (isLoading) return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 to-sky-100">
       <div className="text-gray-600 text-lg">Loading...</div>
     </div>
   )
-
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-slate-100 to-sky-100">
       <div className="py-6 sm:py-12">
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
           <PageHeader />
-          {events.length > 0 && <TotalScore totalScore={totalScore} />}
-          <EventList events={events} onDeleteEvent={handleDeleteEvent} />
+          {filteredEvents.length > 0 && <TotalScore totalScore={totalScore} />}
+          <FilterControls 
+            activeFilter={filterType}
+            selectedDate={selectedDate}
+            onFilterChange={handleFilterChange} 
+            onOpenCalendar={() => setIsCalendarOpen(true)}
+          />
+          <EventList events={filteredEvents} onDeleteEvent={handleDeleteEvent} />
         </main>
       </div>
       <AddEventButton onClick={openModal} />
@@ -96,6 +143,12 @@ export default function HomePage() {
         onClose={closeModal}
         onAddEvent={handleAddEvent}
         isTextError={isTextError}
+      />
+      <CalendarModal
+        isOpen={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+        selectedDate={selectedDate}
+        onDateSelect={handleDateSelect}
       />
     </div>
   );

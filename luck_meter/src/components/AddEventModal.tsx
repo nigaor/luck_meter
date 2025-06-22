@@ -37,9 +37,9 @@ export default function AddEventModal({ isOpen, onClose, onAddEvent, isTextError
         </button>
         <h2 className="text-2xl font-semibold mb-4 text-gray-800">新しい出来事を記録</h2>
         {isTextError && (
-          <div className="mb-4 text-red-600">
-            文章から正しくスコアを生成できませんでした。<br/>
-            再度入力してください。
+          <div className="mb-4 text-red-600 text-center">
+            文章が不適切のため正しくスコアを生成できませんでした。<br/>
+            別の文章を再度入力してください。
           </div>
         )}
         <EventForm
