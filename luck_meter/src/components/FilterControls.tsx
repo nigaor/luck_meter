@@ -45,7 +45,7 @@ export default function FilterControls({
         </div>
         <button
           onClick={onOpenCalendar}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg border transition-colors ${getButtonClass("date")}`}
+          className={`px-4 py-2 text-sm font-semibold rounded-lg border duration-300 hover:scale-120 transition-colors ${getButtonClass("date")}`}
         >
           {/* 選択された日付があれば表示、なければデフォルトのテキスト */}
           {selectedDate && activeFilter === 'date'

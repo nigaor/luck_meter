@@ -1,8 +1,12 @@
+import {format} from 'date-fns/format';
+
 interface TotalScoreProps {
   totalScore: number;
+  filterType: string;
+  selectedDate: Date | undefined;
 }
 
-export default function TotalScore({ totalScore }: TotalScoreProps) {
+export default function TotalScore({ totalScore, filterType, selectedDate }: TotalScoreProps) {
   const getTotalScoreClass = (score: number): string => {
     if (score > 10) return 'text-green-600';
     if (score > 0) return 'text-green-500';
@@ -12,10 +16,28 @@ export default function TotalScore({ totalScore }: TotalScoreProps) {
     return 'text-gray-600';
   };
 
+  const filterdScore = (filterType: string) => {
+    switch (filterType) {
+      case "today":
+        return "今日";
+      case "thisMonth":
+        return "今月";
+      case "thisYear":
+        return "今年";
+      case "date":
+        return selectedDate
+          ? format(selectedDate, "yyyy年M月d日")
+          : "選択された日付";
+      case "all":
+      default:
+        return "全体";
+    }
+  }
+
   return (
     <div className="my-10 p-6 bg-white rounded-xl shadow-lg">
       <h2 className="text-2xl font-semibold text-gray-700 text-center">
-        現在の合計スコア <br/>
+        {filterdScore(filterType)}の合計スコア <br/>
         <span className={`font-bold text-5xl ${getTotalScoreClass(totalScore)}`}>
           {totalScore > 0 ? `+${totalScore}` : totalScore}
         </span>

@@ -115,7 +115,7 @@ export default function HomePage() {
     }
   });
 
-  const totalScore = events.reduce((sum, event) => sum + (event.score || 0), 0);
+  const totalScore = filteredEvents.reduce((sum, event) => sum + (event.score || 0), 0);
 
   if (isLoading) return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 to-sky-100">
@@ -127,7 +127,12 @@ export default function HomePage() {
       <div className="py-6 sm:py-12">
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
           <PageHeader />
-          {filteredEvents.length > 0 && <TotalScore totalScore={totalScore} />}
+          {filteredEvents.length > 0 && 
+            <TotalScore
+             totalScore={totalScore} 
+             filterType={filterType}
+             selectedDate={selectedDate}
+             />}
           <FilterControls 
             activeFilter={filterType}
             selectedDate={selectedDate}
