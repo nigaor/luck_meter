@@ -8,11 +8,20 @@ interface TotalScoreProps {
 
 export default function TotalScore({ totalScore, filterType, selectedDate }: TotalScoreProps) {
   const getTotalScoreClass = (score: number): string => {
-    if (score > 10) return 'text-green-600';
-    if (score > 0) return 'text-green-500';
-    if (score === 0) return 'text-gray-600';
-    if (score < -10) return 'text-red-600';
-    if (score < 0) return 'text-red-500';
+    if (score > 500) return 'text-green-900';
+    if (score > 400) return 'text-green-800';
+    if (score > 300) return 'text-green-700';
+    if (score > 200) return 'text-green-600';
+    if (score > 100) return 'text-green-500';
+    if (score > 0) return 'text-green-400';
+    if (score === 0) return 'text-gray-600'; 
+    if (score < -500) return 'text-red-900';
+    if (score < -400) return 'text-red-800';
+    if (score < -300) return 'text-red-700';
+    if (score < -200) return 'text-red-600';
+    if (score < -100) return 'text-red-500';
+    if (score < -10) return 'text-red-400';
+    if (score < 0) return 'text-red-300';
     return 'text-gray-600';
   };
 
