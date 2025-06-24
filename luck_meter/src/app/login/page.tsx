@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import LoginForm from "@/components/LoginForm"; 
+import LoginForm from "@/components/LoginForm";
 
 export default async function LoginPage() {
   const session = await auth();
@@ -19,7 +19,7 @@ export default async function LoginPage() {
             ログインして、あなたの毎日を記録しましょう
           </p>
         </div>
-        <LoginForm /> {/* クライアントコンポーネントを配置 */}
+        <LoginForm />
       </div>
     </main>
   );

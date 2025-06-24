@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Luck_Meter",
-  description: "日々の出来事を記録して、AIがスコア化・評価してくれるアプリケーションです。",
+  description:
+    "日々の出来事を記録して、AIがスコア化・評価してくれるアプリケーションです。",
 };
 
 export default function RootLayout({
@@ -28,9 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

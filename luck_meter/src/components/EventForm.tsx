@@ -1,32 +1,38 @@
 "use client";
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent } from "react";
 
 interface EventFormProps {
   onAddEvent: (eventText: string) => void;
 }
 
 export default function EventForm({ onAddEvent }: EventFormProps) {
-  const [eventText, setEventText] = useState('');
+  const [eventText, setEventText] = useState("");
 
   // フォーム送信時のハンドラー
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!eventText.trim()) return;
-    onAddEvent(eventText); 
-    setEventText('');
+    onAddEvent(eventText);
+    setEventText("");
   };
   // Enterキーでの送信を防ぐためのハンドラー
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 p-6 bg-white rounded-xl shadow-lg space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="mb-8 p-6 bg-white rounded-xl shadow-lg space-y-6"
+    >
       <div>
-        <label htmlFor="eventText" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="eventText"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           今日の出来事:
         </label>
         <textarea

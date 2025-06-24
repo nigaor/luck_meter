@@ -18,7 +18,7 @@ export const authConfig = {
 
       if (isOnDashboard) {
         if (!isLoggedIn) {
-        return false;
+          return false;
         }
       }
       return true;

@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { auth } from '@/auth';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function DELETE(
   request: Request,
@@ -10,7 +10,7 @@ export async function DELETE(
   const eventId = await params;
 
   if (!session?.user?.id) {
-    return NextResponse.json({ error: '認証されていません' }, { status: 401 });
+    return NextResponse.json({ error: "認証されていません" }, { status: 401 });
   }
 
   try {
@@ -20,15 +20,22 @@ export async function DELETE(
     });
 
     if (!event || event.userId !== session.user.id) {
-      return NextResponse.json({ error: '権限がありません' }, { status: 403 });
+      return NextResponse.json({ error: "権限がありません" }, { status: 403 });
     }
 
     await prisma.event.delete({
       where: { id: eventId.id },
     });
 
-    return NextResponse.json({ message: 'イベントを削除しました' }, { status: 200 });
+    return NextResponse.json(
+      { message: "イベントを削除しました" },
+      { status: 200 }
+    );
   } catch (error) {
-    return NextResponse.json({ error: 'イベントの削除に失敗しました' }, { status: 500 });
+    console.error("イベント作成APIでエラー", error);
+    return NextResponse.json(
+      { error: "イベントの削除に失敗しました" },
+      { status: 500 }
+    );
   }
 }

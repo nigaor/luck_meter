@@ -1,15 +1,9 @@
-
 import NextAuth from "next-auth";
 import { authConfig } from "./auth.config"; // auth.config.tsをインポート
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma"; // PrismaClientのインスタンス
 
-export const {
-  handlers,
-  auth,
-  signIn,
-  signOut,
-} = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
 
   adapter: PrismaAdapter(prisma),
@@ -19,7 +13,7 @@ export const {
   callbacks: {
     ...authConfig.callbacks,
 
-      jwt({ token, user }) {
+    jwt({ token, user }) {
       if (user) {
         token.id = user.id;
       }
