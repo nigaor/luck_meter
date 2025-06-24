@@ -15,7 +15,6 @@ export default function CalendarModal({
   selectedDate,
   onDateSelect,
 }: CalendarModalProps) {
-  // isOpenがfalseなら、何もレンダリングしない
   if (!isOpen) {
     return null;
   }

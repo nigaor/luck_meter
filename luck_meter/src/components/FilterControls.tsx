@@ -21,33 +21,31 @@ export default function FilterControls({
   // ボタンのスタイルを動的に変更するための関数
   const getButtonClass = (filter: FilterType) => {
     return activeFilter === filter
-      ? "bg-indigo-600 text-white" // アクティブなボタン
-      : "bg-white text-gray-700 hover:bg-gray-50"; // 非アクティブなボタン
+      ? "bg-indigo-600 text-white"
+      : "bg-white text-gray-700 hover:bg-gray-50";
   };
 
   return (
     <div className="my-10 p-4 bg-white rounded-xl shadow-lg">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        {/* フィルターボタン群 */}
         <div className="flex flex-wrap items-center gap-2">
-          <button onClick={() => onFilterChange("all")} className={`px-4 py-2 text-sm font-semibold rounded-lg border transition-colors duration-300 hover:scale-120 ${getButtonClass("all")}`}>
+          <button onClick={() => onFilterChange("all")} className={`px-4 py-2 text-sm font-semibold rounded-lg border transition-all duration-100 hover:scale-120 cursor-pointer ${getButtonClass("all")}`}>
             すべて
           </button>
-          <button onClick={() => onFilterChange("today")} className={`px-4 py-2 text-sm font-semibold rounded-lg border transition-colors duration-300 hover:scale-120  ${getButtonClass("today")}`}>
+          <button onClick={() => onFilterChange("today")} className={`px-4 py-2 text-sm font-semibold rounded-lg border transition-all duration-100 hover:scale-120 cursor-pointer ${getButtonClass("today")}`}>
             今日
           </button>
-          <button onClick={() => onFilterChange("thisMonth")} className={`px-4 py-2 text-sm font-semibold rounded-lg border transition-colors duration-300 hover:scale-120  ${getButtonClass("thisMonth")}`}>
+          <button onClick={() => onFilterChange("thisMonth")} className={`px-4 py-2 text-sm font-semibold rounded-lg border transition-all duration-100 hover:scale-120 cursor-pointer ${getButtonClass("thisMonth")}`}>
             今月
           </button>
-          <button onClick={() => onFilterChange("thisYear")} className={`px-4 py-2 text-sm font-semibold rounded-lg border transition-colors duration-300 hover:scale-120  ${getButtonClass("thisYear")}`}>
+          <button onClick={() => onFilterChange("thisYear")} className={`px-4 py-2 text-sm font-semibold rounded-lg border transition-all duration-100 hover:scale-120 cursor-pointer ${getButtonClass("thisYear")}`}>
             今年
           </button>
         </div>
         <button
           onClick={onOpenCalendar}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg border duration-300 hover:scale-120 transition-colors ${getButtonClass("date")}`}
+          className={`px-4 py-2 text-sm font-semibold rounded-lg border duration-100 hover:scale-120 transition-all cursor-pointer ${getButtonClass("date")}`}
         >
-          {/* 選択された日付があれば表示、なければデフォルトのテキスト */}
           {selectedDate && activeFilter === 'date'
             ? format(selectedDate, "yyyy/M/d")
             : "日付で選択"}
