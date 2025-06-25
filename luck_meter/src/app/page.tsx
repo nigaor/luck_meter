@@ -94,7 +94,7 @@ export default function HomePage() {
   const handleFilterChange = (filter: FilterType) => {
     setFilterType(filter);
     if (filter !== "date") {
-      setSelectedDate(undefined); // 他のフィルターが選ばれたら日付選択はリセット
+      setSelectedDate(undefined);
     }
   };
 
