@@ -3,20 +3,19 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  _request: Request,
+  {params}: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
-  const eventId = await params;
+  const eventId = (await params).id ;
 
   if (!session?.user?.id) {
     return NextResponse.json({ error: "認証されていません" }, { status: 401 });
   }
 
   try {
-    // 削除しようとしているイベントが、本当にログインユーザーのものか確認（重要）
     const event = await prisma.event.findUnique({
-      where: { id: eventId.id },
+      where: { id: eventId },
     });
 
     if (!event || event.userId !== session.user.id) {
@@ -24,7 +23,7 @@ export async function DELETE(
     }
 
     await prisma.event.delete({
-      where: { id: eventId.id },
+      where: { id: eventId },
     });
 
     return NextResponse.json(
