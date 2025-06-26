@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Luck_meter
 
-## Getting Started
+## 概要
+出来事を入力するとAIにコメントと点数を出力した結果を返してくれるSNS風メモ帳Webアプリです。
 
-First, run the development server:
+現在はGoogle認証でアカウント情報を管理しているため、サイト使用前にログイン必須となっています。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Webアプリ作成の学習がメインとしての目標のため最低限の機能しかありませんが、今後機能を追加していく予定です。
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+▼本アプリのURL
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+https://luckmeter.vercel.app/
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## アプリの機能概要
+- メモ帳のように出来事を入力することで、AIのコメントと点数を出力するサイト
 
-## Learn More
+- +100～-100の範囲で、大きい出来事ほど高いスコアがつく
 
-To learn more about Next.js, take a look at the following resources:
+- スコアは合計される。すべて、今日、今月、今年のタブを選択することで選択範囲内の合計スコアが算出される
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 意味不明な文字列、過度な下ネタ、0点の出来事(何もしなかった)などはエラーとして出力される
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
