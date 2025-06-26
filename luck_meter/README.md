@@ -21,3 +21,16 @@ https://luckmeter.vercel.app/
 - 意味不明な文字列、過度な下ネタ、0点の出来事(何もしなかった)などはエラーとして出力される
 
 
+使用技術スタック
+
+言語：Typescript
+
+フレームワーク：Next.js、TailwindCSS
+
+ライブラリ：react、OAuth.jsなど
+
+ORM：Prisma
+
+DB：PostgreSQL(supabase)
+
+API：Gemini
