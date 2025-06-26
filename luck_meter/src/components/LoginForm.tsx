@@ -7,7 +7,7 @@ export default function LoginForm() {
   return (
     <div className="flex flex-col items-center gap-4">
       <p className="text-gray-600">
-        Googleアカウントでログイン・新規登録できます。
+        Googleアカウントでログインができます。
       </p>
       <button
         // クリックするとGoogle認証フローが開始される
