@@ -10,7 +10,7 @@ export default function LoginForm() {
         Googleアカウントでログインができます。
       </p>
       <button
-        // クリックするとGoogle認証フローが開始される
+        // クリックするとGoogle認証フローが開始される 
         onClick={() => signIn("google", { callbackUrl: "/" })}
         className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition-colors"
       >
