@@ -11,6 +11,11 @@ Webアプリ作成の学習がメインとしての目標のため最低限の�
 
 https://luckmeter.vercel.app/
 
+▼Qiita 記事
+
+https://qiita.com/nigaor/items/6866e68ab4f664f24111
+
+
 ## アプリの機能概要
 - メモ帳のように出来事を入力することで、AIのコメントと点数を出力するサイト
 
