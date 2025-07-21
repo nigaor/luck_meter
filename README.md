@@ -7,6 +7,8 @@
 
 Webアプリ作成の学習がメインとしての目標のため最低限の機能しかありませんが、今後機能を追加していく予定です。
 
+<img width="814" height="874" alt="サンプル画像" src="https://github.com/user-attachments/assets/28710d9a-5de3-4593-a371-a2ab47b2447a" />
+
 ▼本アプリのURL
 
 https://luckmeter.vercel.app/
